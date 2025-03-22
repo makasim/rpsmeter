@@ -44,6 +44,23 @@ func main() {
 
 See the [examples/main.go](examples/main.go) for a complete example of how to use the meter.
 
+### Benchmarks
+
+```bash
+$go test -run=none -bench=. --memprofile=out.mem 
+2025/03/22 18:36:39 489
+goos: darwin
+goarch: arm64
+pkg: github.com/makasim/rpsmeter
+cpu: Apple M1 Pro
+BenchmarkMeter_Record-10             	170864402	         6.965 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMeter_Parallel_Record-10    	 7997917	       145.6 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMeter_Result-10             	67978878	        17.07 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMeter_Parallel_Result-10    	510158802	         2.170 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/makasim/rpsmeter	5.302s
+```
+
 ### License
 
 MIT
