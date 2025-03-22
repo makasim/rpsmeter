@@ -1,7 +1,6 @@
 package rpsmeter
 
 import (
-	"log"
 	"sync/atomic"
 	"time"
 )
@@ -17,8 +16,6 @@ func init() {
 
 			time.Sleep(time.Millisecond * 80)
 		}
-
-		log.Println(time.Now().UnixMilli() % 1000)
 
 		ticker := time.NewTicker(time.Second)
 		defer ticker.Stop()

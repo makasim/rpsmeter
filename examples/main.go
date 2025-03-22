@@ -26,7 +26,7 @@ func main() {
 	for {
 		select {
 		case <-t.C:
-			fmt.Println(m.LastTenSeconds())
+			fmt.Println(m.Result())
 		}
 	}
 }

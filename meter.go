@@ -16,13 +16,6 @@ func (r *Meter) Record() {
 	now := currentTimestamp.Load()
 	r.resetOutdated(now)
 
-	stored := r.lastRecorded.Swap(now)
-	if now > stored && now-stored > 2 {
-		for i := stored + 1; i < now; i++ {
-			r.buckets[i%n].Store(0)
-		}
-	}
-
 	measureId := now % n
 	r.buckets[measureId].Add(1)
 
@@ -30,11 +23,12 @@ func (r *Meter) Record() {
 	r.buckets[resetId].Store(0)
 }
 
-func (r *Meter) LastTenSeconds() []int64 {
+// Result returns the number of requests per second for the last 10 seconds.
+func (r *Meter) Result() [10]int64 {
 	now := currentTimestamp.Load()
 	r.resetOutdated(now)
 
-	res := make([]int64, 10)
+	res := [10]int64{}
 	for i := 0; i < 10; i++ {
 		res[i] = r.buckets[(now-2-uint64(i))%n].Load()
 	}
