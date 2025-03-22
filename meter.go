@@ -14,7 +14,7 @@ type Meter struct {
 
 func (r *Meter) Record() {
 	now := currentTimestamp.Load()
-	r.cleanupOutdated(now)
+	r.resetOutdated(now)
 
 	stored := r.lastRecorded.Swap(now)
 	if now > stored && now-stored > 2 {
@@ -32,7 +32,7 @@ func (r *Meter) Record() {
 
 func (r *Meter) LastTenSeconds() []int64 {
 	now := currentTimestamp.Load()
-	r.cleanupOutdated(now)
+	r.resetOutdated(now)
 
 	res := make([]int64, 10)
 	for i := 0; i < 10; i++ {
@@ -42,7 +42,7 @@ func (r *Meter) LastTenSeconds() []int64 {
 	return res
 }
 
-func (r *Meter) cleanupOutdated(now uint64) {
+func (r *Meter) resetOutdated(now uint64) {
 	last := r.lastRecorded.Load()
 	if last == 0 || last > now || now-last < 3 {
 		return
@@ -57,11 +57,7 @@ func (r *Meter) cleanupOutdated(now uint64) {
 		diff = 10
 	}
 
-	dbg := make([]int, 0, diff)
 	for i := 0; i < diff; i++ {
-		dbg = append(dbg, int((now-2-uint64(i))%n))
 		r.buckets[(now-2-uint64(i))%n].Store(0)
 	}
-
-	dbg = dbg[:0]
 }
