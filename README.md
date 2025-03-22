@@ -8,6 +8,7 @@ A lightweight, high-performance library for measuring request rates per second i
 - Low memory footprint with fixed-size bucket storage
 - Thread-safe implementation
 - Ability to retrieve per-second statistics for the last 10 seconds
+- Results can be fed infrequently to [hdrhistogram-go](https://github.com/HdrHistogram/hdrhistogram-go) for further analysis
 
 ### Installation
 
