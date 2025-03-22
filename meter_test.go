@@ -15,7 +15,7 @@ func TestMeterRPS(t *testing.T) {
 		return &x
 	}()
 
-	f := func(rps float64, expected [10]int64) {
+	f := func(rps float64, expectedTotal int64, expectedBreakdown [10]int64) {
 		t.Helper()
 
 		synctest.Run(func() {
@@ -43,21 +43,24 @@ func TestMeterRPS(t *testing.T) {
 
 			time.Sleep(time.Second * 20)
 
-			actual := m.Result()
-			if !reflect.DeepEqual(actual, expected) {
-				t.Fatalf("unexpected meter result; got %v; want %v", actual, expected)
+			actualTotal, actualBreakdown := m.Result()
+			if actualTotal != expectedTotal {
+				t.Fatalf("unexpected meter result total; got %v; want %v", actualTotal, expectedTotal)
+			}
+			if !reflect.DeepEqual(actualBreakdown, expectedBreakdown) {
+				t.Fatalf("unexpected meter result rps breakdown; got %v; want %v", actualBreakdown, expectedBreakdown)
 			}
 		})
 	}
 
-	f(20, [10]int64{20, 20, 20, 20, 20, 20, 20, 20, 20, 20})
-	f(10, [10]int64{10, 10, 10, 10, 10, 10, 10, 10, 10, 10})
-	f(1, [10]int64{1, 1, 1, 1, 1, 1, 1, 1, 1, 1})
-	f(0.66666, [10]int64{2, 1, 0, 1, 1, 0, 1, 1, 0, 1})
-	f(0.5, [10]int64{1, 1, 1, 0, 1, 0, 1, 0, 1, 0})
-	f(0.33333, [10]int64{2, 0, 0, 1, 0, 0, 1, 0, 0, 1})
-	f(0.2, [10]int64{0, 0, 0, 1, 0, 0, 0, 0, 1, 0})
-	f(0.1, [10]int64{0, 0, 0, 0, 0, 0, 0, 0, 1, 0})
+	f(20, 399, [10]int64{20, 20, 20, 20, 20, 20, 20, 20, 20, 20})
+	f(10, 199, [10]int64{10, 10, 10, 10, 10, 10, 10, 10, 10, 10})
+	f(1, 20, [10]int64{1, 1, 1, 1, 1, 1, 1, 1, 1, 1})
+	f(0.66666, 13, [10]int64{2, 1, 0, 1, 1, 0, 1, 1, 0, 1})
+	f(0.5, 10, [10]int64{1, 1, 1, 0, 1, 0, 1, 0, 1, 0})
+	f(0.33333, 6, [10]int64{2, 0, 0, 1, 0, 0, 1, 0, 0, 1})
+	f(0.2, 4, [10]int64{0, 0, 0, 1, 0, 0, 0, 0, 1, 0})
+	f(0.1, 2, [10]int64{0, 0, 0, 0, 0, 0, 0, 0, 1, 0})
 }
 
 func TestMeterResetOutdated(t *testing.T) {
@@ -79,10 +82,14 @@ func TestMeterResetOutdated(t *testing.T) {
 		m.Record()
 		time.Sleep(time.Second * 10)
 
-		expected := [10]int64{0, 0, 0, 0, 0, 0, 0, 1, 0, 0}
-		actual := m.Result()
-		if !reflect.DeepEqual(actual, expected) {
-			t.Fatalf("unexpected meter result; got %v; want %v", actual, expected)
+		expectedTotal := int64(1)
+		expectedBreakdown := [10]int64{0, 0, 0, 0, 0, 0, 0, 1, 0, 0}
+		actualTotal, actualBreakdown := m.Result()
+		if !reflect.DeepEqual(actualTotal, expectedTotal) {
+			t.Fatalf("unexpected meter result total; got %v; want %v", actualTotal, expectedTotal)
+		}
+		if !reflect.DeepEqual(actualBreakdown, expectedBreakdown) {
+			t.Fatalf("unexpected meter result rps breakdown; got %v; want %v", actualBreakdown, expectedBreakdown)
 		}
 	})
 }

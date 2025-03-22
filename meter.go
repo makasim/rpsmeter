@@ -7,12 +7,16 @@ import (
 const n = 15
 
 type Meter struct {
+	total   atomic.Int64
 	buckets [n]atomic.Int64
 
 	lastRecorded atomic.Uint64
 }
 
+// Record increments the total request count and updates the current second's bucket, resetting outdated ones.
 func (r *Meter) Record() {
+	r.total.Add(1)
+
 	now := currentTimestamp.Load()
 	r.resetOutdated(now)
 
@@ -23,8 +27,9 @@ func (r *Meter) Record() {
 	r.buckets[resetId].Store(0)
 }
 
-// Result returns the number of requests per second for the last 10 seconds.
-func (r *Meter) Result() [10]int64 {
+// Result returns the total number of requests and a breakdown of requests per second over the last 10 seconds.
+// The per-second request counts are provided as an array, where the most recent second is at index 0.
+func (r *Meter) Result() (int64, [10]int64) {
 	now := currentTimestamp.Load()
 	r.resetOutdated(now)
 
@@ -33,7 +38,7 @@ func (r *Meter) Result() [10]int64 {
 		res[i] = r.buckets[(now-2-uint64(i))%n].Load()
 	}
 
-	return res
+	return r.total.Load(), res
 }
 
 func (r *Meter) resetOutdated(now uint64) {

@@ -34,8 +34,8 @@ func main() {
     // Record requests as they happen
     meter.Record()
     
-    // Get the count of requests for the last 10 seconds
-    counts := meter.LastTenSeconds()
+    // Get the total and the breakdown count of requests for the last 10 seconds
+    total, breakdown := meter.Result()
     fmt.Println(counts)
 }
 ```
@@ -47,18 +47,14 @@ See the [examples/main.go](examples/main.go) for a complete example of how to us
 ### Benchmarks
 
 ```bash
-$go test -run=none -bench=. --memprofile=out.mem 
-2025/03/22 18:36:39 489
-goos: darwin
-goarch: arm64
-pkg: github.com/makasim/rpsmeter
-cpu: Apple M1 Pro
-BenchmarkMeter_Record-10             	170864402	         6.965 ns/op	       0 B/op	       0 allocs/op
-BenchmarkMeter_Parallel_Record-10    	 7997917	       145.6 ns/op	       0 B/op	       0 allocs/op
-BenchmarkMeter_Result-10             	67978878	        17.07 ns/op	       0 B/op	       0 allocs/op
-BenchmarkMeter_Parallel_Result-10    	510158802	         2.170 ns/op	       0 B/op	       0 allocs/op
-PASS
-ok  	github.com/makasim/rpsmeter	5.302s
+BenchmarkMeter_Record
+BenchmarkMeter_Record-10             	102875260	        11.63 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMeter_Parallel_Record
+BenchmarkMeter_Parallel_Record-10    	 5847054	       244.4 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMeter_Result
+BenchmarkMeter_Result-10             	52411759	        22.96 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMeter_Parallel_Result
+BenchmarkMeter_Parallel_Result-10    	440293185	         2.799 ns/op	       0 B/op	       0 allocs/op
 ```
 
 ### License
