@@ -7,6 +7,8 @@ import (
 )
 
 func BenchmarkMeter_Record(b *testing.B) {
+	rpsmeter.Init()
+
 	var m rpsmeter.Meter
 
 	b.ReportAllocs()
@@ -16,6 +18,8 @@ func BenchmarkMeter_Record(b *testing.B) {
 }
 
 func BenchmarkMeter_Parallel_Record(b *testing.B) {
+	rpsmeter.Init()
+
 	var m rpsmeter.Meter
 
 	b.ReportAllocs()
@@ -27,6 +31,8 @@ func BenchmarkMeter_Parallel_Record(b *testing.B) {
 }
 
 func BenchmarkMeter_Result(b *testing.B) {
+	rpsmeter.Init()
+
 	var m rpsmeter.Meter
 
 	b.ReportAllocs()
@@ -36,6 +42,8 @@ func BenchmarkMeter_Result(b *testing.B) {
 }
 
 func BenchmarkMeter_Parallel_Result(b *testing.B) {
+	rpsmeter.Init()
+
 	var m rpsmeter.Meter
 
 	b.ReportAllocs()

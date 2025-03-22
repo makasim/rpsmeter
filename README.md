@@ -28,6 +28,8 @@ import (
 )
 
 func main() {
+	rpsmeter.Init()
+	
     // Create a new meter
     var meter rpsmeter.Meter
     

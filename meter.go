@@ -1,6 +1,7 @@
 package rpsmeter
 
 import (
+	"log"
 	"sync/atomic"
 )
 
@@ -14,40 +15,40 @@ type Meter struct {
 }
 
 // Record increments the total request count and updates the current second's bucket, resetting outdated ones.
-func (r *Meter) Record() {
-	r.total.Add(1)
+func (m *Meter) Record() {
+	m.total.Add(1)
 
-	now := currentTimestamp.Load()
-	r.resetOutdated(now)
+	now := m.currentTimestamp()
+	m.resetOutdated(now)
 
 	measureId := now % n
-	r.buckets[measureId].Add(1)
+	m.buckets[measureId].Add(1)
 
 	resetId := (now + 2) % n
-	r.buckets[resetId].Store(0)
+	m.buckets[resetId].Store(0)
 }
 
 // Result returns the total number of requests and a breakdown of requests per second over the last 10 seconds.
 // The per-second request counts are provided as an array, where the most recent second is at index 0.
-func (r *Meter) Result() (int64, [10]int64) {
-	now := currentTimestamp.Load()
-	r.resetOutdated(now)
+func (m *Meter) Result() (int64, [10]int64) {
+	now := m.currentTimestamp()
+	m.resetOutdated(now)
 
 	res := [10]int64{}
 	for i := 0; i < 10; i++ {
-		res[i] = r.buckets[(now-2-uint64(i))%n].Load()
+		res[i] = m.buckets[(now-2-uint64(i))%n].Load()
 	}
 
-	return r.total.Load(), res
+	return m.total.Load(), res
 }
 
-func (r *Meter) resetOutdated(now uint64) {
-	last := r.lastRecorded.Load()
+func (m *Meter) resetOutdated(now uint64) {
+	last := m.lastRecorded.Load()
 	if last == 0 || last > now || now-last < 3 {
 		return
 	}
 
-	if !r.lastRecorded.CompareAndSwap(last, now) {
+	if !m.lastRecorded.CompareAndSwap(last, now) {
 		return
 	}
 
@@ -57,6 +58,14 @@ func (r *Meter) resetOutdated(now uint64) {
 	}
 
 	for i := 0; i < diff; i++ {
-		r.buckets[(now-2-uint64(i))%n].Store(0)
+		m.buckets[(now-2-uint64(i))%n].Store(0)
 	}
+}
+
+func (m *Meter) currentTimestamp() uint64 {
+	if currentTimestamp == nil {
+		log.Panic("rpcmeter.Init() must be called before using the meter")
+	}
+
+	return currentTimestamp.Load()
 }

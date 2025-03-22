@@ -8,6 +8,8 @@ import (
 )
 
 func main() {
+	rpsmeter.Init()
+
 	var m rpsmeter.Meter
 
 	go func() {
