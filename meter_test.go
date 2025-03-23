@@ -107,6 +107,7 @@ func TestMeterResetOutdated(t *testing.T) {
 	f(time.Second*13, [10]int64{0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 	f(time.Second*14, [10]int64{0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 	f(time.Second*15, [10]int64{0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	f(time.Second*16, [10]int64{0, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func TestMeterResetOutdatedAndRecord(t *testing.T) {
@@ -161,6 +162,7 @@ func TestMeterResetOutdatedAndRecord(t *testing.T) {
 	f(time.Second*13, [10]int64{1, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 	f(time.Second*14, [10]int64{1, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 	f(time.Second*15, [10]int64{1, 0, 0, 0, 0, 0, 0, 0, 0, 0})
+	f(time.Second*16, [10]int64{1, 0, 0, 0, 0, 0, 0, 0, 0, 0})
 }
 
 func TestMeter_Concurrency(t *testing.T) {
