@@ -52,14 +52,19 @@ See the [examples/main.go](examples/main.go) for a complete example of how to us
 ### Benchmarks
 
 ```bash
+goos: darwin
+goarch: arm64
+pkg: github.com/makasim/rpsmeter
+cpu: Apple M1 Pro
 BenchmarkMeter_Record
-BenchmarkMeter_Record-10             	102875260	        11.63 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMeter_Record-10             	16001502	        66.33 ns/op	       0 B/op	       0 allocs/op
 BenchmarkMeter_Parallel_Record
-BenchmarkMeter_Parallel_Record-10    	 5847054	       244.4 ns/op	       0 B/op	       0 allocs/op
+wBenchmarkMeter_Parallel_Record-10    	 6901602	       222.6 ns/op	       0 B/op	       0 allocs/op
 BenchmarkMeter_Result
-BenchmarkMeter_Result-10             	52411759	        22.96 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMeter_Result-10             	16143379	        74.11 ns/op	       0 B/op	       0 allocs/op
 BenchmarkMeter_Parallel_Result
-BenchmarkMeter_Parallel_Result-10    	440293185	         2.799 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMeter_Parallel_Result-10    	15999057	        77.68 ns/op	       0 B/op	       0 allocs/op
+PASS
 ```
 
 ### License
