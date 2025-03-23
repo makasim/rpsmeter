@@ -20,6 +20,7 @@ func (m *Meter) Record() {
 
 	now := time.Now().Unix()
 	m.resetOutdated(now)
+	m.lastRecorded.Store(now)
 
 	measureId := now % n
 	m.buckets[measureId].Add(1)
@@ -33,6 +34,7 @@ func (m *Meter) Record() {
 func (m *Meter) Result() (int64, [10]int64) {
 	now := time.Now().Unix()
 	m.resetOutdated(now)
+	m.lastRecorded.Store(now)
 
 	res := [10]int64{}
 	for i := 0; i < 10; i++ {
@@ -52,12 +54,15 @@ func (m *Meter) resetOutdated(now int64) {
 		return
 	}
 
-	diff := int(now - 2 - last)
-	if diff > 10 {
-		diff = 10
+	diff := int(now - last)
+	if diff > 15 {
+		diff = 15
 	}
 
+	dbg := []int{}
 	for i := 0; i < diff; i++ {
-		m.buckets[(now-2-int64(i))%n].Store(0)
+		dbg = append(dbg, int((now-int64(i))%n))
+		m.buckets[(now-int64(i))%n].Store(0)
 	}
+	// fmt.Printf("now: %d, reset: %v\n", now%n, dbg)
 }

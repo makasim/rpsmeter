@@ -57,13 +57,13 @@ goarch: arm64
 pkg: github.com/makasim/rpsmeter
 cpu: Apple M1 Pro
 BenchmarkMeter_Record
-BenchmarkMeter_Record-10             	16001502	        66.33 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMeter_Record-10             	15797224	        65.87 ns/op	       0 B/op	       0 allocs/op
 BenchmarkMeter_Parallel_Record
-wBenchmarkMeter_Parallel_Record-10    	 6901602	       222.6 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMeter_Parallel_Record-10    	 4568796	       244.9 ns/op	       0 B/op	       0 allocs/op
 BenchmarkMeter_Result
-BenchmarkMeter_Result-10             	16143379	        74.11 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMeter_Result-10             	15882662	        75.28 ns/op	       0 B/op	       0 allocs/op
 BenchmarkMeter_Parallel_Result
-BenchmarkMeter_Parallel_Result-10    	15999057	        77.68 ns/op	       0 B/op	       0 allocs/op
+BenchmarkMeter_Parallel_Result-10    	13241128	        84.27 ns/op	       0 B/op	       0 allocs/op
 PASS
 ```
 
